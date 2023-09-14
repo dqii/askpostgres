@@ -1,14 +1,8 @@
 import os
-import psycopg2
+from ..utils import traverse_directory
 
-DATABASE_CONFIG = {
-    'dbname': 'postgres',
-    'user': 'postgres',
-    'password': 'postgres',
-    'host': 'localhost'
-}
 
-DIRECTORY_PATH = "/app/postgresql"
+DIRECTORY_PATH = "/app/repo/postgresql"
 FILE_TYPES = {
     '.sgml': 'docs',
     '.c': 'code',
@@ -48,16 +42,5 @@ def insert_file_into_db(conn, file_path):
         conn.commit()
 
 
-def traverse_directory(directory_path):
-    conn = psycopg2.connect(**DATABASE_CONFIG)
-
-    for root, _, files in os.walk(directory_path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            insert_file_into_db(conn, file_path)
-
-    conn.close()
-
-
 if __name__ == "__main__":
-    traverse_directory("/app/postgresql")
+    traverse_directory(DIRECTORY_PATH, insert_file_into_db)

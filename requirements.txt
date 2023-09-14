@@ -2,5 +2,4 @@ langchain
 openai
 chroma
 tiktoken
-PyGithub
 psycopg2

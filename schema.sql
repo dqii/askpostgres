@@ -13,7 +13,7 @@ CREATE TABLE messages (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- NOTEL Document type can be docs, code
+-- NOTE: Document type can be docs, code
 -- TODO: Support document types - mailing list.
 CREATE TABLE postgres_documents (
     id SERIAL PRIMARY KEY,
