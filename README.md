@@ -8,7 +8,7 @@
 
 # Ask LlamaIndex
 
-1. [x] Load files into DB
+1. [ ] Load files into DB
 2. [ ] Separate files into blocks
 3. [ ] Generate embeddings for blocks
 4. [ ] Write a function that fetches most relevant blocks with KNN
