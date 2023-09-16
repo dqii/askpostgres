@@ -13,13 +13,12 @@ CREATE TABLE messages (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- NOTE: Document type can be docs, code
--- TODO: Support document types - mailing list.
-CREATE TABLE postgres_documents (
+CREATE TABLE documents (
     id SERIAL PRIMARY KEY,
-    document_type TEXT NOT NULL,
-    repo_path TEXT,
-    url TEXT NOT NULL,
+    repo_name TEXT NOT NULL, -- e.g., postgresql
+    document_type TEXT NOT NULL, -- e.g., docs, code, mailing list
+    repo_path TEXT, -- e.g., src/backend/commands/async.c
+    url TEXT NOT NULL, -- e.g., https://github.com/postgres/postgres/blob/master/src/backend/commands/async.c
     contents TEXT NOT NULL,
     embedding REAL[]
 );
