@@ -19,3 +19,18 @@ def generate_embedding(code_string):
         dim=1).squeeze().numpy().tolist()
 
     return embedding
+
+
+def generate_embeddings(code_strings):
+    # Tokenize the batch of code strings
+    inputs = tokenizer(code_strings, return_tensors="pt",
+                       padding=True, truncation=True, max_length=512)
+
+    # Generate embeddings
+    with torch.no_grad():
+        outputs = model(**inputs)
+
+    # Use the last hidden state as the embedding for each code string in the batch
+    embeddings = outputs.last_hidden_state.mean(dim=1).numpy().tolist()
+
+    return embeddings
