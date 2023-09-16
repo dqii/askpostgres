@@ -1,5 +1,5 @@
 import os
-from ..utils.s1_load_repo import traverse_directory
+from ..utils.load_repo import traverse_directory
 
 
 DIRECTORY_PATH = "/app/repo/postgresql"

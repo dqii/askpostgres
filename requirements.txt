@@ -3,3 +3,4 @@ openai
 chroma
 tiktoken
 psycopg2
+tree_sitter_lanuages

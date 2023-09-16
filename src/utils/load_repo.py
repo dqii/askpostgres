@@ -1,12 +1,7 @@
 import os
 import psycopg2
 
-DATABASE_CONFIG = {
-    'dbname': 'postgres',
-    'user': 'postgres',
-    'password': 'postgres',
-    'host': 'localhost'
-}
+DATABASE_URL = os.environ['DATABASE_URL']
 
 
 def insert_file_into_db(conn, directory_path, file_path, get_document_type, get_document_url):
@@ -28,7 +23,8 @@ def insert_file_into_db(conn, directory_path, file_path, get_document_type, get_
 
 
 def traverse_directory(directory_path, get_document_type, get_document_url):
-    conn = psycopg2.connect(**DATABASE_CONFIG)
+
+    conn = psycopg2.connect(DATABASE_URL)
 
     for root, _, files in os.walk(directory_path):
         for file in files:

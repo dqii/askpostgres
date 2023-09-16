@@ -2,3 +2,4 @@
 .postgresql
 db/
 repo/
+__pycache__/

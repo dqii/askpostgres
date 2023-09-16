@@ -1,17 +1,21 @@
 version: '3'
 services:
-  askpostgres:
-    container_name: askpostgres
-    build: .
-    env_file: .env
-    ports:
-      - 5435:5432
+  db:
+    container_name: db
+    image: lanterndata/lantern:latest-pg15
     volumes:
       - ./db/data:/var/lib/postgresql/data
-      - .:/app
+    ports:
+      - 5435:5432
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_PORT=5432
+  askpostgres:
+    container_name: askpostgres
+    image: python:3.9
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: /bin/sh -c "pip install --no-cache-dir -r /app/requirements.txt && tail -f /dev/null"
