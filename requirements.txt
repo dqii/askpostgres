@@ -3,4 +3,5 @@ openai
 chroma
 tiktoken
 psycopg2
-tree_sitter_lanuages
+tree_sitter_languages
+tree_sitter

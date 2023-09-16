@@ -15,10 +15,16 @@ CREATE TABLE messages (
 
 CREATE TABLE documents (
     id SERIAL PRIMARY KEY,
-    repo_name TEXT NOT NULL, -- e.g., postgresql
+    repo_name TEXT NOT NULL, -- e.g., postgresql, llama_index
     document_type TEXT NOT NULL, -- e.g., docs, code, mailing list
-    repo_path TEXT, -- e.g., src/backend/commands/async.c
     url TEXT NOT NULL, -- e.g., https://github.com/postgres/postgres/blob/master/src/backend/commands/async.c
+    contents TEXT NOT NULL,
+    embedding REAL[]
+);
+
+CREATE TABLE chunks (
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER NOT NULL REFERENCES documents(id),
     contents TEXT NOT NULL,
     embedding REAL[]
 );

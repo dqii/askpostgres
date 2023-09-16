@@ -16,10 +16,11 @@ def insert_file_into_db(conn, directory_path, file_path, get_document_type, get_
 
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO documents (repo_name, document_type, repo_path, url, contents) VALUES (%s, %s, %s, %s, %s)",
-            (repo_name, document_type, repo_path, url, content)
+            "INSERT INTO documents (repo_name, document_type, url, contents) VALUES (%s, %s, %s, %s)",
+            (repo_name, document_type, url, content)
         )
         conn.commit()
+        cur.close()
 
 
 def traverse_directory(directory_path, get_document_type, get_document_url):
