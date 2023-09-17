@@ -1,51 +1,33 @@
 import os
-import psycopg2
-from ..utils.generate_embeddings import generate_embeddings
+import openai
+from .s4_find_relevant import find_relevant
 
-REPO_NAME = 'llama_index'
-BATCH_SIZE = 32
-
-DATABASE_URL = os.environ['DATABASE_URL']
-conn = psycopg2.connect(DATABASE_URL)
-cur = conn.cursor()
+openai.api_key = os.environ['OPENAI_API_KEY']
 
 
-def process_and_update_batch(table_name, batch):
-    ids, contents = zip(*batch)
-    embeddings = generate_embeddings(list(contents))
-    for i, embedding in enumerate(embeddings):
-        sql = f"UPDATE {table_name} SET embedding = %s WHERE id = %s"
-        cur.execute(sql, (embedding, ids[i]))
-
-
-# Select all documents from DB and process in batches
-sql = """
-    SELECT id, contents FROM documents WHERE repo_name = %s AND document_type = 'code'
+SYSTEM_PROMPT = """
+You are a Q&A assistant for developers using LlamaIndex, a data framework for LLM applications to ingest, structure, and access private or domain-specific data.
 """
-cur.execute(sql, (REPO_NAME,))
-documents = cur.fetchall()
 
-for i in range(0, len(documents), BATCH_SIZE):
-    process_and_update_batch("documents", documents[i:i + BATCH_SIZE])
-    print(f"Processed documents {i} - {i + BATCH_SIZE} of {len(documents)}")
 
-# Select all chunks from DB and process in batches
-sql = """
-    SELECT id, contents FROM chunks WHERE document_id IN (
-        SELECT id FROM documents WHERE repo_name = %s AND document_type = 'code'
+def ask_llm(question):
+    relevant_chunks = find_relevant(question)
+    user_prompt = "\n\n".join([
+        question,
+        "Here are some pieces of code that I thought might be relevant in helping answer this question.",
+        "\n---\n".join(relevant_chunks)
+    ])
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_prompt},
+        ]
     )
-"""
-cur.execute(sql, (REPO_NAME,))
-chunks = cur.fetchall()
+    return completion.choices[0].message.content
 
-for i in range(0, len(chunks), BATCH_SIZE):
-    process_and_update_batch("chunks", chunks[i:i + BATCH_SIZE])
-    print(f"Processed chunks {i} - {i + BATCH_SIZE} of {len(chunks)}")
 
-conn.commit()
-cur.close()
-conn.close()
-
+print(ask_llm("How can I get started with LlamaIndex?"))
 
 """
 askpostgres % python3 -m src.llama_index.s5_ask_llm

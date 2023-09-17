@@ -8,3 +8,6 @@ tree_sitter
 transformers
 torch
 openai
+pinecone
+sentence_transformers
+llama_index
