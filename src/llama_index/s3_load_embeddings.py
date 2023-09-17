@@ -32,7 +32,7 @@ for i in range(0, len(documents), BATCH_SIZE):
 # Select all chunks from DB and process in batches
 sql = """
     SELECT id, contents FROM chunks WHERE document_id IN (
-        SELECT id FROM documents WHERE repo_name = %s
+        SELECT id FROM documents WHERE repo_name = %s AND document_type = 'code'
     )
 """
 cur.execute(sql, (REPO_NAME,))

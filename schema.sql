@@ -22,9 +22,15 @@ CREATE TABLE documents (
     embedding REAL[]
 );
 
+CREATE INDEX documents_index ON documents USING hnsw (embedding);
+
 CREATE TABLE chunks (
     id SERIAL PRIMARY KEY,
     document_id INTEGER NOT NULL REFERENCES documents(id),
     contents TEXT NOT NULL,
     embedding REAL[]
 );
+
+CREATE INDEX chunks_index ON chunks USING hnsw (embedding);
+
+SET enable_seqscan = OFF;
